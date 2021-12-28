@@ -25,6 +25,8 @@ end
 case encrypt_method
 when 1
   puts Digest::MD5.hexdigest(word)
-else
+when 2
   puts Digest::SHA1.hexdigest(word)
+else
+  puts "..."
 end
