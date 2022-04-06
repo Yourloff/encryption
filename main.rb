@@ -1,32 +1,26 @@
-#encoding: UTF-8
-if (Gem.win_platform?)
-  Encoding.default_external = Encoding.find(Encoding.locale_charmap)
-  Encoding.default_internal = __ENCODING__
+require 'digest'
 
-  [STDIN, STDOUT].each do |io|
-    io.set_encoding(Encoding.default_external, Encoding.default_internal)
-  end
-end
-require 'Digest'
+encryption = %w[MD5 SHA1 SHA2]
 
 puts 'Введите слово или фразу для шифрования:'
 
-word = STDIN.gets.chomp
+word = $stdin.gets.chomp
 
 puts 'Каким способом зашифровать?'
-puts '1. MD5\n2. SHA1'
-encrypt_method = STDIN.gets.to_i
+encryption.each_with_index { |item, index| puts "#{index + 1}. #{item}" }
 
-until encrypt_method.between?(1, 2)
-  puts 'Выберите 1 или 2'
-  encrypt_method = STDIN.gets.to_i
+encrypt_by_index = $stdin.gets.to_i
+
+until encrypt_by_index.between?(1, encryption.size)
+  puts 'Выберите 1-3'
+  encrypt_by_index = $stdin.gets.to_i
 end
 
-case encrypt_method
+case encrypt_by_index - 1
+when 0
+  puts "md5: #{Digest::MD5.hexdigest(word)}"
 when 1
-  puts Digest::MD5.hexdigest(word)
+  puts "sha1: #{Digest::SHA1.hexdigest(word)}"
 when 2
-  puts Digest::SHA1.hexdigest(word)
-else
-  puts "..."
+  puts "sha2: #{Digest::SHA2.hexdigest(word)}"
 end
